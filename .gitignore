@@ -1,0 +1,19 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules
+
+# Environment variables
+.env
+
+# Production builds
+dist
+
+# OS and editor junk
+.DS_Store
+*.swp
+.vscode
+.idea

@@ -10,7 +10,7 @@ import { dirname } from 'path';
 
 import connectDB from './config/db.js';
 
-import characterRoutes from './routes/characterRoutes.js';
+import characterRoutes from './routes/CharacterRoutes.js';
 import titleRoutes from './routes/titleRoutes.js';
 import speciesRoutes from './routes/speciesRoutes.js';
 import userRoutes from './routes/userRoutes.js';

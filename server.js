@@ -11,13 +11,13 @@ import { dirname } from 'path';
 import connectDB from './config/db.js';
 
 import characterRoutes from './routes/CharacterRoutes.js';
-import titleRoutes from './routes/titleRoutes.js';
-import speciesRoutes from './routes/speciesRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-import civilizationRoutes from './routes/civilizationRoutes.js';
-import weaponRoutes from './routes/weaponRoutes.js';
-import equipmentRoutes from './routes/equipmentRoutes.js';
-import searchRoutes from './routes/searchRoutes.js';
+import titleRoutes from './routes/TitleRoutes.js';
+import speciesRoutes from './routes/SpeciesRoutes.js';
+import userRoutes from './routes/UserRoutes.js';
+import civilizationRoutes from './routes/CivilizationRoutes.js';
+import weaponRoutes from './routes/WeaponRoutes.js';
+import equipmentRoutes from './routes/EquipmentRoutes.js';
+import searchRoutes from './routes/SearchRoutes.js';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 

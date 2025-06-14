@@ -62,8 +62,9 @@ app.use(rateLimit({
 const allowedOrigins = [
   'http://localhost:4173',
   'http://localhost:5173',
+  'http://localhost:5175', // ✅ added
   'https://stephen-fawn.vercel.app',
-  'https://stephen-l2pbzexsg-stephen0254s-projects.vercel.app' // ✅ added missing Vercel domain
+  'https://stephen-l2pbzexsg-stephen0254s-projects.vercel.app'
 ];
 
 app.use(cors({

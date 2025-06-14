@@ -1,4 +1,3 @@
-// backend/server.js
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
@@ -63,7 +62,7 @@ app.use(rateLimit({
 const allowedOrigins = [
   'http://localhost:4173',
   'http://localhost:5173',
-  'https://dream-comics-universe.vercel.app', // ✅ REPLACE with your actual Vercel frontend URL
+  'https://stephen-fawn.vercel.app', // ✅ your actual deployed frontend
 ];
 
 app.use(cors({
@@ -75,7 +74,7 @@ app.use(cors({
       return callback(new Error(`❌ CORS blocked: ${origin}`), false);
     }
   },
-  credentials: true, // ✅ enable credentials
+  credentials: true,
 }));
 
 // === Middleware ===

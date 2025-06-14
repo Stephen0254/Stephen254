@@ -59,24 +59,23 @@ app.use(rateLimit({
   message: '⚠️ Too many requests from this IP, please try again later.',
 }));
 
-// === CORS ===
+// === CORS (allow frontend) ===
 const allowedOrigins = [
-  'http://localhost:4173', // added your frontend port here
+  'http://localhost:4173',
   'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
+  'https://dream-comics-universe.vercel.app', // ✅ REPLACE with your actual Vercel frontend URL
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-      return callback(new Error(msg), false);
+  origin: function (origin, callback) {
+    console.log('🌐 CORS Origin:', origin); // debug
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error(`❌ CORS blocked: ${origin}`), false);
     }
-    return callback(null, true);
   },
-  credentials: true,
+  credentials: true, // ✅ enable credentials
 }));
 
 // === Middleware ===

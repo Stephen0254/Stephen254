@@ -52,44 +52,53 @@ connectDB()
 
 // === Security ===
 app.use(helmet());
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: '⚠️ Too many requests from this IP, please try again later.',
-}));
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: '⚠️ Too many requests from this IP, please try again later.',
+  })
+);
 
 // === CORS ===
 const allowedOrigins = [
   'http://localhost:5173',
   'https://stephen-fawn.vercel.app',
   'https://stephen254.vercel.app',
-  'https://stephen-g1rnnr2gr-stephen0254s-projects.vercel.app'
+  'https://stephen-g1rnnr2gr-stephen0254s-projects.vercel.app',
+  'https://stephen-k8xw5u2w1-stephen0254s-projects.vercel.app', // ✅ NEWLY ADDED
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    console.log('🌐 CORS Origin:', origin);
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`❌ CORS blocked: ${origin}`));
-    }
-  },
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      console.log('🌐 CORS Origin:', origin);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`❌ CORS blocked: ${origin}`));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // === Middleware ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // === Serve static files (uploads) with CORP header ===
-app.use('/uploads', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Cross-Origin-Resource-Policy', 'cross-origin'); // ✅ REQUIRED FIX
-  next();
-}, express.static(path.join(__dirname, 'uploads')));
+app.use(
+  '/uploads',
+  (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Cross-Origin-Resource-Policy', 'cross-origin'); // ✅ REQUIRED FIX
+    next();
+  },
+  express.static(path.join(__dirname, 'uploads'))
+);
 
 // === API Routes ===
 app.use('/api/characters', characterRoutes);

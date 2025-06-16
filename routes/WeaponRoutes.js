@@ -1,5 +1,9 @@
 import express from 'express';
 import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 import Weapon from '../models/weaponModel.js';
 import { protect } from '../middleware/authMiddleware.js';
 import adminMiddleware from '../middleware/adminMiddleware.js';
@@ -7,14 +11,18 @@ import validateObjectId from '../middleware/validateObjectIdMiddleware.js';
 
 const router = express.Router();
 
-// Multer setup
+// Enable __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// ✅ Multer storage config — save to backend/uploads/
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, path.join(__dirname, '../uploads'));
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + file.originalname.replace(/\s+/g, '-');
-    cb(null, uniqueSuffix);
+    const uniqueName = Date.now() + '-' + file.originalname.replace(/\s+/g, '-');
+    cb(null, uniqueName);
   },
 });
 

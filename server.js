@@ -58,22 +58,21 @@ app.use(rateLimit({
   message: '⚠️ Too many requests from this IP, please try again later.',
 }));
 
-// === CORS (allow frontend) ===
+// === CORS ===
 const allowedOrigins = [
-  'http://localhost:4173',
   'http://localhost:5173',
-  'http://localhost:5175', // ✅ added
   'https://stephen-fawn.vercel.app',
-  'https://stephen-l2pbzexsg-stephen0254s-projects.vercel.app'
+  'https://stephen254.vercel.app',
+  'https://stephen-g1rnnr2gr-stephen0254s-projects.vercel.app'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log('🌐 CORS Origin:', origin); // debug
+    console.log('🌐 CORS Origin:', origin);
     if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
+      callback(null, true);
     } else {
-      return callback(new Error(`❌ CORS blocked: ${origin}`), false);
+      callback(new Error(`❌ CORS blocked: ${origin}`));
     }
   },
   credentials: true,
@@ -83,11 +82,14 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// === Serve static files ===
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
-  dotfiles: 'deny',
-  maxAge: '1d',
-}));
+// === Serve static files (uploads) with CORP header ===
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin'); // ✅ REQUIRED FIX
+  next();
+}, express.static(path.join(__dirname, 'uploads')));
 
 // === API Routes ===
 app.use('/api/characters', characterRoutes);

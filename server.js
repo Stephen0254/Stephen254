@@ -66,7 +66,7 @@ const allowedOrigins = [
   'https://stephen-fawn.vercel.app',
   'https://stephen254.vercel.app',
   'https://stephen-g1rnnr2gr-stephen0254s-projects.vercel.app',
-  'https://stephen-k8xw5u2w1-stephen0254s-projects.vercel.app', // ✅ NEWLY ADDED
+  'https://stephen-k8xw5u2w1-stephen0254s-projects.vercel.app',
 ];
 
 app.use(
@@ -83,6 +83,15 @@ app.use(
   })
 );
 
+// ✅ Add this CORS error handler just after cors()
+app.use((err, req, res, next) => {
+  if (err.message && err.message.startsWith('❌ CORS blocked')) {
+    console.error(err.message);
+    return res.status(403).json({ message: err.message });
+  }
+  next(err);
+});
+
 // === Middleware ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -94,7 +103,7 @@ app.use(
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Cross-Origin-Resource-Policy', 'cross-origin'); // ✅ REQUIRED FIX
+    res.header('Cross-Origin-Resource-Policy', 'cross-origin');
     next();
   },
   express.static(path.join(__dirname, 'uploads'))

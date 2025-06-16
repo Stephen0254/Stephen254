@@ -67,6 +67,7 @@ const allowedOrigins = [
   'https://stephen254.vercel.app',
   'https://stephen-g1rnnr2gr-stephen0254s-projects.vercel.app',
   'https://stephen-k8xw5u2w1-stephen0254s-projects.vercel.app',
+  'https://stephen-niekvif25-stephen0254s-projects.vercel.app', // ✅ NEWLY ADDED
 ];
 
 app.use(
@@ -82,15 +83,6 @@ app.use(
     credentials: true,
   })
 );
-
-// ✅ Add this CORS error handler just after cors()
-app.use((err, req, res, next) => {
-  if (err.message && err.message.startsWith('❌ CORS blocked')) {
-    console.error(err.message);
-    return res.status(403).json({ message: err.message });
-  }
-  next(err);
-});
 
 // === Middleware ===
 app.use(express.json());

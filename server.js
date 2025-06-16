@@ -63,11 +63,7 @@ app.use(
 // === CORS ===
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://stephen-fawn.vercel.app',
-  'https://stephen254.vercel.app',
-  'https://stephen-g1rnnr2gr-stephen0254s-projects.vercel.app',
-  'https://stephen-k8xw5u2w1-stephen0254s-projects.vercel.app',
-  'https://stephen-niekvif25-stephen0254s-projects.vercel.app', // ✅ NEWLY ADDED
+  'https://stephen-fawn.vercel.app', // ✅ Your frontend
 ];
 
 app.use(

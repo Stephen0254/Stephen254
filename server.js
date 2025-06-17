@@ -12,11 +12,12 @@ import connectDB from './config/db.js';
 import characterRoutes from './routes/CharacterRoutes.js';
 import titleRoutes from './routes/TitleRoutes.js';
 import speciesRoutes from './routes/SpeciesRoutes.js';
-import userRoutes from './routes/UserRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import civilizationRoutes from './routes/CivilizationRoutes.js';
 import weaponRoutes from './routes/WeaponRoutes.js';
-import equipmentRoutes from './routes/EquipmentRoutes.js';
+import equipmentRoutes from './routes/equipmentRoutes.js';
 import searchRoutes from './routes/SearchRoutes.js';
+import worldRoutes from './routes/WorldRoutes.js';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
@@ -63,7 +64,8 @@ app.use(
 // === CORS ===
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://stephen-fawn.vercel.app', // ✅ Your frontend
+  'https://stephen-fawn.vercel.app',
+  'https://stephen-95sgvaxk8-stephen0254s-projects.vercel.app', // ✅ NEW FRONTEND URL
 ];
 
 app.use(
@@ -84,7 +86,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// === Serve static files (uploads) with CORP header ===
+// === Static Uploads Folder ===
 app.use(
   '/uploads',
   (req, res, next) => {
@@ -106,21 +108,20 @@ app.use('/api/civilizations', civilizationRoutes);
 app.use('/api/weapons', weaponRoutes);
 app.use('/api/equipment', equipmentRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/worlds', worldRoutes);
 
-// === Health & Test Routes ===
+// === Health/Test Routes ===
 app.get('/health', (req, res) => res.json({ status: 'OK' }));
 app.post('/test', (req, res) => {
   console.log('🧪 POST /test hit');
   res.json({ body: req.body });
 });
 
-// === Fallback for unknown routes ===
+// === Fallback & Error Handling ===
 app.use((req, res, next) => {
   console.log('⚠️ Unmatched route:', req.method, req.originalUrl);
   next();
 });
-
-// === Error Handling ===
 app.use(notFound);
 app.use(errorHandler);
 

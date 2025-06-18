@@ -14,7 +14,7 @@ import titleRoutes from './routes/TitleRoutes.js';
 import speciesRoutes from './routes/SpeciesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import civilizationRoutes from './routes/CivilizationRoutes.js';
-import weaponRoutes from './routes/weaponRoutes.js';
+import weaponRoutes from './routes/WeaponRoutes.js';
 import equipmentRoutes from './routes/equipmentRoutes.js';
 import searchRoutes from './routes/SearchRoutes.js';
 import worldRoutes from './routes/WorldRoutes.js';

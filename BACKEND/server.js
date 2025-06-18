@@ -14,7 +14,7 @@ import titleRoutes from './routes/TitleRoutes.js';
 import speciesRoutes from './routes/SpeciesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import civilizationRoutes from './routes/CivilizationRoutes.js';
-import weaponRoutes from './routes/WeaponRoutes.js';
+import weaponRoutes from './routes/weaponRoutes.js';
 import equipmentRoutes from './routes/equipmentRoutes.js';
 import searchRoutes from './routes/SearchRoutes.js';
 import worldRoutes from './routes/WorldRoutes.js';
@@ -65,7 +65,8 @@ app.use(
 const allowedOrigins = [
   'http://localhost:5173',
   'https://stephen-fawn.vercel.app',
-  'https://stephen-95sgvaxk8-stephen0254s-projects.vercel.app', // ✅ NEW FRONTEND URL
+  'https://stephen-95sgvaxk8-stephen0254s-projects.vercel.app',
+  'https://dream-comics-universe.vercel.app', // ✅ Add your live frontend URL here
 ];
 
 app.use(
@@ -110,7 +111,8 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/worlds', worldRoutes);
 
-// === Health/Test Routes ===
+// === Health & Root Route ===
+app.get('/', (req, res) => res.send('🌍 DREAM COMICS API is running'));
 app.get('/health', (req, res) => res.json({ status: 'OK' }));
 app.post('/test', (req, res) => {
   console.log('🧪 POST /test hit');

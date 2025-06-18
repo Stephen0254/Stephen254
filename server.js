@@ -12,7 +12,7 @@ import connectDB from './config/db.js';
 import characterRoutes from './routes/CharacterRoutes.js';
 import titleRoutes from './routes/TitleRoutes.js';
 import speciesRoutes from './routes/SpeciesRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+import userRoutes from './routes/UserRoutes.js';
 import civilizationRoutes from './routes/CivilizationRoutes.js';
 import weaponRoutes from './routes/WeaponRoutes.js';
 import equipmentRoutes from './routes/equipmentRoutes.js';

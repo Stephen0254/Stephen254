@@ -66,7 +66,8 @@ const allowedOrigins = [
   'http://localhost:5173',
   'https://stephen-fawn.vercel.app',
   'https://stephen-95sgvaxk8-stephen0254s-projects.vercel.app',
-  'https://dream-comics-universe.vercel.app', // ✅ Add your live frontend URL here
+  'https://stephen-nfkxrkgjy-stephen0254s-projects.vercel.app', // ✅ Current deployment
+  'https://dream-comics-universe.vercel.app',
 ];
 
 app.use(
@@ -82,6 +83,18 @@ app.use(
     credentials: true,
   })
 );
+
+// ✅ Handle CORS Preflight Requests
+app.options('*', cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`❌ CORS blocked (preflight): ${origin}`));
+    }
+  },
+  credentials: true,
+}));
 
 // === Middleware ===
 app.use(express.json());

@@ -63,7 +63,7 @@ const allowedOrigins = [
   'https://stephen-95sgvaxk8-stephen0254s-projects.vercel.app',
   'https://stephen-nfkxrkgjy-stephen0254s-projects.vercel.app',
   'https://dream-comics-universe.vercel.app',
-  'https://dcu-frontend-mtkk-hwfwuxytu-stephen0254s-projects.vercel.app', // ✅ added
+  'https://dcu-frontend-mtkk-hwfwuxytu-stephen0254s-projects.vercel.app',
 ];
 
 app.use(
@@ -146,8 +146,8 @@ app.use((req, res, next) => {
 app.use(notFound);
 app.use(errorHandler);
 
-// === Start Server ===
-const PORT = process.env.PORT || 5000;
+// ✅ REQUIRED BY RENDER: Use exactly process.env.PORT with no fallback!
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`🚀 Server started on port ${PORT}`);
 });

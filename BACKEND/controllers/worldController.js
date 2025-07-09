@@ -15,7 +15,10 @@ export const getWorlds = asyncHandler(async (req, res) => {
 // @route   GET /api/worlds/:id
 export const getWorldById = asyncHandler(async (req, res) => {
   const world = await World.findById(req.params.id);
-  if (!world) throw new Error('World not found');
+  if (!world) {
+    res.status(404);
+    throw new Error('World not found');
+  }
   res.json(world);
 });
 
@@ -23,25 +26,35 @@ export const getWorldById = asyncHandler(async (req, res) => {
 // @route   POST /api/worlds
 export const createWorld = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
-
   const image = req.file ? req.file.filename : '';
 
-  const world = new World({ name, description, image });
-  const created = await world.save();
-  res.status(201).json(created);
+  try {
+    const world = new World({ name, description, image });
+    const created = await world.save();
+    res.status(201).json(created);
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(400);
+      throw new Error('A world/realm with this name already exists.');
+    } else {
+      throw error;
+    }
+  }
 });
 
 // @desc    Update world
 // @route   PUT /api/worlds/:id
 export const updateWorld = asyncHandler(async (req, res) => {
   const world = await World.findById(req.params.id);
-  if (!world) throw new Error('World not found');
+  if (!world) {
+    res.status(404);
+    throw new Error('World not found');
+  }
 
   world.name = req.body.name || world.name;
   world.description = req.body.description || world.description;
 
   if (req.file) {
-    // delete old image
     if (world.image) {
       const oldPath = path.join('uploads', world.image);
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
@@ -57,7 +70,10 @@ export const updateWorld = asyncHandler(async (req, res) => {
 // @route   DELETE /api/worlds/:id
 export const deleteWorld = asyncHandler(async (req, res) => {
   const world = await World.findById(req.params.id);
-  if (!world) throw new Error('World not found');
+  if (!world) {
+    res.status(404);
+    throw new Error('World not found');
+  }
 
   if (world.image) {
     const imagePath = path.join('uploads', world.image);

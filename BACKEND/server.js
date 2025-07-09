@@ -1,3 +1,4 @@
+// ✅ Fixed Express server.js with safe preflight handler and full CORS support
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
@@ -9,6 +10,7 @@ import { dirname } from 'path';
 
 import connectDB from './config/db.js';
 
+// Import Routes
 import characterRoutes from './routes/CharacterRoutes.js';
 import titleRoutes from './routes/TitleRoutes.js';
 import speciesRoutes from './routes/SpeciesRoutes.js';
@@ -18,22 +20,15 @@ import weaponRoutes from './routes/WeaponRoutes.js';
 import equipmentRoutes from './routes/equipmentRoutes.js';
 import searchRoutes from './routes/SearchRoutes.js';
 import worldRoutes from './routes/WorldRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
 const app = express();
-
-// Get __dirname replacement in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// === Logging ===
-app.use((req, res, next) => {
-  console.log('🔍 Request:', req.method, req.url);
-  next();
-});
 
 // === ENV check ===
 ['MONGO_URI', 'JWT_SECRET'].forEach((key) => {
@@ -51,7 +46,7 @@ connectDB()
     process.exit(1);
   });
 
-// === Security ===
+// === Security Middleware ===
 app.use(helmet());
 app.use(
   rateLimit({
@@ -61,13 +56,14 @@ app.use(
   })
 );
 
-// === CORS ===
+// === CORS Setup ===
 const allowedOrigins = [
   'http://localhost:5173',
   'https://stephen-fawn.vercel.app',
   'https://stephen-95sgvaxk8-stephen0254s-projects.vercel.app',
-  'https://stephen-nfkxrkgjy-stephen0254s-projects.vercel.app', // ✅ Current deployment
+  'https://stephen-nfkxrkgjy-stephen0254s-projects.vercel.app',
   'https://dream-comics-universe.vercel.app',
+  'https://dcu-frontend-mtkk-hwfwuxytu-stephen0254s-projects.vercel.app', // ✅ added
 ];
 
 app.use(
@@ -84,21 +80,27 @@ app.use(
   })
 );
 
-// ✅ Handle CORS Preflight Requests
-app.options('*', cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`❌ CORS blocked (preflight): ${origin}`));
-    }
-  },
-  credentials: true,
-}));
+// ✅ Handle preflight OPTIONS requests globally
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  return res.sendStatus(204);
+});
 
-// === Middleware ===
+// === Body Parsers ===
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// === Logging ===
+app.use((req, res, next) => {
+  console.log('🔍 Request:', req.method, req.url);
+  next();
+});
 
 // === Static Uploads Folder ===
 app.use(
@@ -106,14 +108,26 @@ app.use(
   (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    );
     res.header('Cross-Origin-Resource-Policy', 'cross-origin');
     next();
   },
   express.static(path.join(__dirname, 'uploads'))
 );
 
+// === Health Check Routes ===
+app.get('/', (req, res) => res.send('🌍 DREAM COMICS API is running'));
+app.get('/api/health', (req, res) => res.json({ status: 'OK' }));
+app.post('/test', (req, res) => {
+  console.log('🧪 POST /test hit');
+  res.json({ body: req.body });
+});
+
 // === API Routes ===
+app.use('/api/auth', authRoutes);
 app.use('/api/characters', characterRoutes);
 app.use('/api/titles', titleRoutes);
 app.use('/api/species', speciesRoutes);
@@ -124,15 +138,7 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/worlds', worldRoutes);
 
-// === Health & Root Route ===
-app.get('/', (req, res) => res.send('🌍 DREAM COMICS API is running'));
-app.get('/health', (req, res) => res.json({ status: 'OK' }));
-app.post('/test', (req, res) => {
-  console.log('🧪 POST /test hit');
-  res.json({ body: req.body });
-});
-
-// === Fallback & Error Handling ===
+// === Error Handling ===
 app.use((req, res, next) => {
   console.log('⚠️ Unmatched route:', req.method, req.originalUrl);
   next();
